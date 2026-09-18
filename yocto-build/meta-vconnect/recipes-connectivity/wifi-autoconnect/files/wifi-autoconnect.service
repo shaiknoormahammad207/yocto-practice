@@ -1,0 +1,19 @@
+[Unit]
+Description=Automated Wi-Fi and DHCP Connection
+After=network.target sys-subsystem-net-devices-wlan0.device
+Wants=sys-subsystem-net-devices-wlan0.device
+
+[Service]
+Type=forking
+ExecStartPre=/sbin/ip link set dev wlan0 up
+ExecStartPre=/bin/mkdir -p /var/run/wpa_supplicant
+ExecStart=/usr/sbin/wpa_supplicant -B -i wlan0 -c /etc/wifi/wpa_supplicant.conf -D nl80211
+ExecStartPost=/sbin/udhcpc -i wlan0 -b -R
+ExecStop=/bin/killall udhcpc
+ExecStopPost=/bin/killall wpa_supplicant
+ExecStopPost=/sbin/ip link set dev wlan0 down
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

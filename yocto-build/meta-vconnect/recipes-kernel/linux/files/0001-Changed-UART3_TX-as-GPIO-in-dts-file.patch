@@ -1,0 +1,63 @@
+From 535233732e8b22182cd068f3a7605e210633bc64 Mon Sep 17 00:00:00 2001
+From: Noor Mahammad <shaiknoormahammad207@gmail.com>
+Date: Wed, 26 Aug 2026 12:35:36 +0530
+Subject: [PATCH] Changed UART3_TX as GPIO in dts file
+
+---
+ .../boot/dts/nxp/imx/mys-6ul-14x14-evk.dtsi   | 21 ++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/nxp/imx/mys-6ul-14x14-evk.dtsi b/arch/arm/boot/dts/nxp/imx/mys-6ul-14x14-evk.dtsi
+index 5d1b331eb..3df725bfd 100755
+--- a/arch/arm/boot/dts/nxp/imx/mys-6ul-14x14-evk.dtsi
++++ b/arch/arm/boot/dts/nxp/imx/mys-6ul-14x14-evk.dtsi
+@@ -181,11 +181,23 @@ led1: user {
+ 			gpios = <&gpio5 2 GPIO_ACTIVE_LOW>;
+ 			default-state = "off";
+ 		};
++		/*
+         	led2: buzzor {
+ 			label = "buzzor";
+ 			gpios = <&gpio1 24 GPIO_ACTIVE_LOW>;
+ 			default-state = "off";
+ 		};
++		*/
++	};
++
++	my_gpio {
++		compatible = "noor,my-gpio";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_ext_gpio>;
++
++		gpios = <&gpio1 24 GPIO_ACTIVE_HIGH>;
++
++		status = "okay";
+ 	};
+ 
+ 	gpio-keys {
+@@ -681,6 +693,13 @@ MX6UL_PAD_CSI_MCLK__CSI_MCLK		0x1b088
+ 		>;
+ 	};
+ 
++	/* UART1_TX acts as GPIO */
++	pinctrl_ext_gpio: extgpiogrp {
++		fsl,pins = <
++	        MX6UL_PAD_UART3_TX_DATA__GPIO1_IO24 0x1b0b0
++		>;
++	};
++
+ 	pinctrl_csi1: csi1grp {
+ 		fsl,pins = <
+ 			MX6UL_PAD_CSI_MCLK__CSI_MCLK		0x1b088
+@@ -865,7 +884,7 @@ pinctrl_leds: ledgrp {
+ 		fsl,pins = <
+             MX6UL_PAD_SNVS_TAMPER1__GPIO5_IO01 0x1b0b0
+             MX6UL_PAD_SNVS_TAMPER2__GPIO5_IO02 0x1b0b0
+-	    MX6UL_PAD_UART3_TX_DATA__GPIO1_IO24 0x1b0b0
++	   // MX6UL_PAD_UART3_TX_DATA__GPIO1_IO24 0x1b0b0
+ 		>;
+ 	};
+ 
+-- 
+2.43.0
+
